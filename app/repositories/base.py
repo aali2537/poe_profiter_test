@@ -8,6 +8,7 @@ ModelType = TypeVar("ModelType", bound=Base)
 
 class BaseRepository(Generic[ModelType]):
     """Base repository with common CRUD operations."""
+    #TODO: have commits be done in a context wrapper so we can chain repo actions without commiting to the db.
     
     def __init__(self, model: Type[ModelType], db: Session):
         self.model = model
