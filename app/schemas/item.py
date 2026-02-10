@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class PriceBase(BaseModel):
@@ -16,12 +16,10 @@ class PriceCreate(PriceBase):
 
 class Price(PriceBase):
     """Schema for Price response."""
+    model_config = ConfigDict(from_attributes=True)
     id: int
     item_id: int
     recorded_at: datetime
-    
-    class Config:
-        from_attributes = True
 
 
 class ItemBase(BaseModel):
@@ -38,10 +36,8 @@ class ItemCreate(ItemBase):
 
 class Item(ItemBase):
     """Schema for Item response."""
+    model_config = ConfigDict(from_attributes=True)
     id: int
     created_at: datetime
     updated_at: Optional[datetime] = None
     prices: List[Price] = []
-    
-    class Config:
-        from_attributes = True
