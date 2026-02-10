@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 
 from app.core.database import Base
 
-
+#TODO create a parent base class that has id, created_at, and updated_at so we have that functionality for all our models.
 class Item(Base):
     """Model representing an item in the game."""
     
