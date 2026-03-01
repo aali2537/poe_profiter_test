@@ -14,7 +14,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U poe_user"]
+      test: ["CMD-SHELL", "pg_isready -U poe_user -d poe_profiter"]
       interval: 5s
       timeout: 5s
       retries: 5
