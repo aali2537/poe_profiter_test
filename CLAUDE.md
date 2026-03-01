@@ -41,7 +41,32 @@ uvicorn app.main:app --reload
 
 ## Tests
 
-There is no test suite yet. No test runner is configured.
+Tests live in `tests/`, mirroring the `app/` folder structure:
+
+```
+tests/
+├── conftest.py              ← shared fixtures (engine, db, client, sample_item, sample_price)
+├── test_main.py             ← route integration tests
+├── models/test_item.py      ← ORM model and relationship tests
+├── repositories/
+│   ├── test_base.py         ← BaseRepository CRUD unit tests
+│   └── test_item.py         ← ItemRepository / PriceRepository unit tests
+└── schemas/test_item.py     ← Pydantic schema validation unit tests
+```
+
+Each test gets a fresh SQLite in-memory database (via `StaticPool`). No running PostgreSQL is needed.
+
+**Run locally:**
+```bash
+uv run pytest tests/ -v
+```
+
+**Run in Docker** (same environment as the server):
+```bash
+docker compose --profile test run --rm test
+```
+
+The `test` service in `docker-compose.yml` builds from the `test` stage of the `Dockerfile`, which extends the production `base` stage and adds dev dependencies (`pytest`, `httpx`) and the `tests/` directory.
 
 ## Known TODOs in the Codebase
 
