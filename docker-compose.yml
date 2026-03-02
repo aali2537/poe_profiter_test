@@ -39,7 +39,12 @@ services:
       db:
         condition: service_healthy
     volumes:
+<<<<<<< HEAD
       - ./backend/app:/app/app
+=======
+      - ./app:/app/app
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+>>>>>>> ff00647 (Migrate from requirements.txt to uv for dependency management)
 
 volumes:
   postgres_data:
