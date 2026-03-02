@@ -19,9 +19,9 @@ services:
       timeout: 5s
       retries: 5
 
-  web:
-    build: .
-    container_name: poe_profiter_web
+  backend:
+    build: ./backend
+    container_name: poe_profiter_backend
     ports:
       - "8000:8000"
     environment:
@@ -30,12 +30,11 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./app:/app/app
-    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      - ./backend/app:/app/app
 
   test:
     build:
-      context: .
+      context: ./backend
       target: test
     profiles:
       - test
