@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11-slim AS base
 
 WORKDIR /app
 
@@ -22,3 +22,13 @@ EXPOSE 8000
 
 # Run the application
 CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+FROM base AS test
+
+# Install dev dependencies (adds pytest, httpx)
+RUN uv sync --frozen
+
+# Copy test files
+COPY tests/ ./tests/
+
+CMD ["uv", "run", "pytest", "tests/", "-v"]

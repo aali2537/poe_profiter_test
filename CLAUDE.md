@@ -41,13 +41,38 @@ uvicorn app.main:app --reload
 
 ## Tests
 
-There is no test suite yet. No test runner is configured.
+Tests live in `tests/`, mirroring the `app/` folder structure:
+
+```
+tests/
+├── conftest.py              ← shared fixtures (engine, db, client, sample_item, sample_price)
+├── test_main.py             ← route integration tests
+├── models/test_item.py      ← ORM model and relationship tests
+├── repositories/
+│   ├── test_base.py         ← BaseRepository CRUD unit tests
+│   └── test_item.py         ← ItemRepository / PriceRepository unit tests
+└── schemas/test_item.py     ← Pydantic schema validation unit tests
+```
+
+Each test gets a fresh SQLite in-memory database (via `StaticPool`). No running PostgreSQL is needed.
+
+**Run locally:**
+```bash
+uv run pytest tests/ -v
+```
+
+**Run in Docker** (same environment as the server):
+```bash
+docker compose --profile test run --rm test
+```
+
+The `test` service in `docker-compose.yml` builds from the `test` stage of the `Dockerfile`, which extends the production `base` stage and adds dev dependencies (`pytest`, `httpx`) and the `tests/` directory.
 
 ## Known TODOs in the Codebase
 
 - `app/models/item.py`: Create a parent base class with `id`, `created_at`, `updated_at` for all models to inherit
 - `app/repositories/base.py`: Wrap commits in a context manager to support chaining repo actions without intermediate DB commits
-- Dependencies are managed with `uv` (`pyproject.toml` + `uv.lock`); run `uv sync` to install
+- `requirements.txt`: Switch from plain `requirements.txt` to Poetry for dependency management
 
 ## Adding New Features
 
