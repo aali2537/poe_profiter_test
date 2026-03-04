@@ -1,0 +1,4 @@
+.vite/
+eslint.config.js
+README.md
+vite.config.ts
