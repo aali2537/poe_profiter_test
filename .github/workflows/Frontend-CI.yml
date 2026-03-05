@@ -4,12 +4,17 @@ on:
   pull_request: 
     branches:
       - main
+    types: 
+      - opened
+      - synchronize
+      - closed
     paths:
       - 'frontend/**'
   workflow_dispatch:
 
 jobs:
   frontend-checks:
+    if: github.event.action == 'opened' || github.event.action == 'synchronize'
     runs-on: ubuntu-24.04
     defaults:
       run:
@@ -77,3 +82,12 @@ jobs:
               repo: context.repo.repo,
               body: `Preview deployed: ${url}`
             });
+
+      - name: Delete PR preview
+        if: github.event.action == 'closed'
+        run: |
+          git clone --branch gh-pages https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} temp
+          cd temp
+          git rm -r pr-${{ github.event.pull_request.number }}
+          git commit -m "Remove PR preview #${{ github.event.pull_request.number }}"
+          git push
