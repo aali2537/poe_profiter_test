@@ -28,8 +28,11 @@ jobs:
           - lint
           - test
     steps:
-      - name: Checkout repo
+      - name: Checkout pr branch
         uses: actions/checkout@v6
+        with: 
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v6.2.0
